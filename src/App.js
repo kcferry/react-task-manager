@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { v4 as uuidv4 } from 'uuid';
 import Header from './components/Header'
 import Tasks from './components/Tasks'
+import AddTask from './components/AddTask'
 
 function App() {
-
+  const [showAddTask, setShowAddTask] = useState(false)
   const [tasks, settasks] = useState([
     {
         id: 1,
@@ -25,8 +27,14 @@ function App() {
     },
   ])
 
-  // Delete Task
+  // Add Task
+  const addTask = (task) => {
+    const id = uuidv4()
+    const newTask = {id, ...task}
+    settasks([...tasks, newTask])
+  }
 
+  // Delete Task
   const deleteTask = (id) => {
     settasks(tasks.filter((task) => task.id !== id ))
   }
@@ -42,6 +50,9 @@ function App() {
   return (
     <div className="container">
       <Header />
+
+      {showAddTask && <AddTask onAdd={addTask}/> }
+
       {tasks.length > 0 ? (
         <Tasks tasks={tasks} 
         onDelete={deleteTask}
@@ -49,6 +60,7 @@ function App() {
         /> 
       ) : (
           'No Tasks To Show')}
+
     </div>
   );
 }
